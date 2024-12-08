@@ -4,84 +4,69 @@ export function monteCarloSim(
   dailyCleans,
   numSimulations
 ) {
-  // Object to initialize arrays to track the number of days to remove the virus,
-  // track how many computers were infected, and if a computer was infected or not for each simulation
   const results = {
     timesToClear: [],
     infectionCount: [],
-    infectedOnceAcrossSimulations: Array(numComputers).fill(0), // Track how many simulations each computer was infected
+    infectedOnceAcrossSimulations: Array(numComputers).fill(0),
   };
 
-  for (let i = 0; i < numSimulations; i++) {
-    let infected = Array(numComputers).fill(false); // Initial state of the computers
-    let infectedOnce = Array(numComputers).fill(false); // Track if a computer was infected at least once
-    infected[Math.floor(Math.random() * numComputers)] = true; // Random computer is infected
+  for (let sim = 0; sim < numSimulations; sim++) {
+    const infectedOnce = new Set();
+    let infectedQueue = [Math.floor(Math.random() * numComputers)]; // Virus randomly infects one computer in the morning
+    infectedOnce.add(infectedQueue[0]);
     let day = 0;
 
-    while (infected.some((stillInfected) => stillInfected)) {
+    while (infectedQueue.length > 0) {
       day++;
 
-      let newInfections = [...infected];
-      infected.forEach((isInfected) => {
-        if (isInfected) {
-          for (let j = 0; j < numComputers; j++) {
-            if (!infected[j] && Math.random() < infectionProb) {
-              newInfections[j] = true;
-            }
+      // Infection attempts to spread
+      const newlyInfected = new Set();
+      for (const current of infectedQueue) {
+        for (let j = 0; j < numComputers; j++) {
+          if (!infectedOnce.has(j) && Math.random() < infectionProb) {
+            newlyInfected.add(j);
           }
         }
-      });
+      }
 
-      infected = newInfections;
+      // Mark newly infected computers
+      newlyInfected.forEach((computer) => infectedOnce.add(computer));
 
-      // Mark any newly infected computer as having been infected at least once
-      infected.forEach((isInfected, i) => {
-        if (isInfected) {
-          infectedOnce[i] = true; // Track it as infected at least once
-        }
-      });
+      // Clean up to dailyCleans (5) infected computers from newlyInfected
+      const infectedList = Array.from(newlyInfected);
+      const toClean = new Set();
+      while (toClean.size < Math.min(dailyCleans, infectedList.length)) {
+        const idx = Math.floor(Math.random() * infectedList.length);
+        toClean.add(infectedList[idx]);
+      }
+      toClean.forEach((computer) => newlyInfected.delete(computer));
 
-      const infectedComputers = infected
-        .map((val, idx) => (val ? idx : -1))
-        .filter((idx) => idx !== -1);
-
-      // Clean the infected computers
-      const numComputersToClean = Math.min(
-        dailyCleans,
-        infectedComputers.length
-      );
-      const computersToClean = infectedComputers.slice(0, numComputersToClean);
-      computersToClean.forEach((idx) => {
-        infected[idx] = false; // Clean the computer
-      });
+      // Update infectedQueue for next day
+      infectedQueue = Array.from(newlyInfected);
     }
 
-    // After the simulation, count how many computers were infected at least once
+    // Store results for current simulation
     results.timesToClear.push(day);
-    results.infectionCount.push(infectedOnce.filter(Boolean).length); // Count how many computers got infected at least once
-
-    // Update the count of how many simulations each computer was infected in
-    infectedOnce.forEach((wasInfected, idx) => {
-      if (wasInfected) {
-        results.infectedOnceAcrossSimulations[idx] += 1; // Increment the count for this computer
-      }
+    results.infectionCount.push(infectedOnce.size);
+    infectedOnce.forEach((computer) => {
+      results.infectedOnceAcrossSimulations[computer]++;
     });
   }
 
   return {
     averageTimeToClear: parseFloat(
       (
-        results.timesToClear.reduce((a, b) => a + b, 0) / numSimulations
+        results.timesToClear.reduce((acc, curr) => acc + curr, 0) /
+        numSimulations
       ).toFixed(4)
     ),
-
     probabilityOfInfection: results.infectedOnceAcrossSimulations.map((count) =>
       parseFloat((count / numSimulations).toFixed(4))
     ),
-
     averageNumOfInfections: parseFloat(
       (
-        results.infectionCount.reduce((a, b) => a + b, 0) / numSimulations
+        results.infectionCount.reduce((acc, curr) => acc + curr, 0) /
+        numSimulations
       ).toFixed(4)
     ),
   };

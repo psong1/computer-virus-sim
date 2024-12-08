@@ -24,13 +24,28 @@ function App() {
     <div className="App">
       <h1>Computer Virus Simulation</h1>
       <div>
-        <label>Number of computers: {numComputers}</label>
+        <label>Number of computers: </label>
+        <input
+          type="number"
+          value={numComputers}
+          onChange={(e) => setNumComputers(Number(e.target.value))}
+        ></input>
       </div>
       <div>
-        <label>Infection Probability: {infectionProb}</label>
+        <label>Infection Probability: </label>
+        <input
+          type="number"
+          value={infectionProb}
+          onChange={(e) => setInfectionProb(Number(e.target.value))}
+        ></input>
       </div>
       <div>
-        <label>Daily Cleans: {dailyCleans}</label>
+        <label>Daily Cleans: </label>
+        <input
+          type="number"
+          value={dailyCleans}
+          onChange={(e) => setDailyCleans(Number(e.target.value))}
+        ></input>
       </div>
       <div>
         <label>Number of Simulations: </label>
