@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/computer-virus-sim/static/css/main.116a0dc0.css",
+    "main.js": "/computer-virus-sim/static/js/main.649e7c3c.js",
+    "static/js/453.786c6ca1.chunk.js": "/computer-virus-sim/static/js/453.786c6ca1.chunk.js",
+    "index.html": "/computer-virus-sim/index.html",
+    "main.116a0dc0.css.map": "/computer-virus-sim/static/css/main.116a0dc0.css.map",
+    "main.649e7c3c.js.map": "/computer-virus-sim/static/js/main.649e7c3c.js.map",
+    "453.786c6ca1.chunk.js.map": "/computer-virus-sim/static/js/453.786c6ca1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.116a0dc0.css",
+    "static/js/main.649e7c3c.js"
+  ]
+}
