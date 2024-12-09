@@ -12,3 +12,7 @@ Twenty computers are connected in a network. One computer becomes infected with 
 - the expected time it takes to remove the virus from the whole network;
 - the probability that each computer gets infected at least once;
 - the expected number of computers that get infected.
+
+The situation provides defined values for each parameter, but the program allows the user to change the parameters.
+
+- Drastically increasing/decreasing the number of simulations shows how more/less precise the calculated values become to their true expected values.

@@ -36,6 +36,7 @@ function App() {
         <input
           type="number"
           value={infectionProb}
+          step="0.1"
           onChange={(e) => setInfectionProb(Number(e.target.value))}
         ></input>
       </div>
